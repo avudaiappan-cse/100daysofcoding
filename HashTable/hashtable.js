@@ -27,12 +27,19 @@ class HashTable {
     const keysArray = [];
     for (let i = 0; i < this.data.length; i++) {
       if (this.data[i]) {
-        for (let j = 0; j < this.data[i].length; j++) {
-          if (this.data[i][j]) keysArray.push(this.data[i][j][0]);
-        }
+        keysArray.push(this.data[i][0][0]);
       }
     }
     return keysArray;
+  }
+  values() {
+    const valuesArray = [];
+    for (let i = 0; i < this.data.length; i++) {
+      if (this.data[i]) {
+        valuesArray.push(this.data[i][0][1]);
+      }
+    }
+    return valuesArray;
   }
 }
 
@@ -41,3 +48,4 @@ myHashTable.set("apple", 100);
 myHashTable.set("orange", 100000);
 console.log(myHashTable.get("orange"));
 console.log(myHashTable.keys());
+console.log(myHashTable.values());
