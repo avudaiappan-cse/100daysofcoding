@@ -1,81 +1,92 @@
-class LinkedList {
-  constructor(value) {
-    this.head = {
-      value: value,
-      next: null,
-    };
-    this.tail = this.head;
-    this.length = 1;
-  }
-  prepend(value) {
-    const newNode = {
-      value,
-      next: null,
-    };
-    newNode.next = this.head;
-    this.head = newNode;
-    this.length++;
-    return this;
-  }
-  append(value) {
-    const newNode = {
-      value,
-      next: null,
-    };
-    this.tail.next = newNode;
-    this.tail = newNode;
-    this.length++;
-    return this;
-  }
-  printList() {
-    const nodeValues = [];
-    let currentHead = this.head;
-    while (currentHead !== null) {
-      nodeValues.push(currentHead.value);
-      currentHead = currentHead.next;
-    }
-    return nodeValues;
-  }
-  insert(index, value) {
-    if (index >= this.length) return this.append(value);
-    const newNode = {
-      value,
-      next: null,
-    };
-    const prev = this.traverseToIndex(index - 1);
-    newNode.next = prev.next;
-    prev.next = newNode;
-    this.length++;
-    return this;
-  }
-  remove(index) {
-    if (index === 0) {
-      this.head = this.head.next;
-      this.length--;
-      return this;
-    }
-    const prev = this.traverseToIndex(index - 1);
-    const nodeToBeRemoved = prev.next;
-    prev.next = nodeToBeRemoved.next;
-    this.length--;
-    return this.printList();
-  }
-  traverseToIndex(index) {
-    let counter = 0;
-    let currentHead = this.head;
-    while (counter !== index) {
-      currentHead = currentHead.next;
-      counter++;
-    }
-    return currentHead;
+class Node {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
   }
 }
 
-const linkedList = new LinkedList(10);
-linkedList.append(5);
-linkedList.prepend(1);
-linkedList.insert(2, 99);
-linkedList.insert(100, 89);
-console.log(linkedList.printList());
-linkedList.remove(1);
-console.log(linkedList);
+class LinkedList {
+  constructor() {
+    this.head = null; // first Element
+    this.tail = null; // last element
+  }
+  //Add element to the head of LL
+  prepend(value) {
+    const newNode = new Node(value);
+    if (this.head === null) this.head = this.tail = newNode;
+    else {
+      newNode.next = this.head;
+      this.head = newNode;
+    }
+  }
+  //Add element to the tail of LL
+  append(value) {
+    const newNode = new Node(value);
+    if (this.head === null) {
+      this.head = this.tail = newNode;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+  }
+  delete(value) {
+    if (!this.head) return;
+
+    //Check if head is to be deleted
+    while (this.head && this.head.data === value) {
+      this.head = this.head.next;
+    }
+
+    let currentNode = this.head;
+
+    if (currentNode)
+      while (currentNode.next) {
+        if (currentNode.next.data === value)
+          currentNode.next = currentNode.next.next;
+        else currentNode = currentNode.next;
+      }
+
+    //check if tail is to be deleted
+    if (this.tail.data === value) this.tail = currentNode;
+  }
+  insertAfter(value, afterValue) {
+    const newNode = new Node(afterValue);
+    const previous = this.find(value);
+    if (previous) {
+      newNode.next = previous.next;
+      previous.next = newNode;
+    }
+  }
+  find(value) {
+    if (!this.head) return;
+    let currentNode = this.head;
+    while (currentNode) {
+      if (currentNode.data === value) return currentNode;
+      currentNode = currentNode.next;
+    }
+    return null;
+  }
+  // Traverse add LL element to Array
+  toArray() {
+    const elements = [];
+    let currentNode = this.head;
+    while (currentNode !== null) {
+      elements.push(currentNode.data);
+      currentNode = currentNode.next;
+    }
+    return elements;
+  }
+}
+
+const ll = new LinkedList();
+ll.append(12);
+ll.append(13);
+ll.append(14);
+ll.prepend(11);
+ll.prepend(10);
+ll.delete(10);
+console.log(ll.find(13));
+console.log(ll.find(10));
+
+console.log(ll.toArray());
+console.log(ll);
